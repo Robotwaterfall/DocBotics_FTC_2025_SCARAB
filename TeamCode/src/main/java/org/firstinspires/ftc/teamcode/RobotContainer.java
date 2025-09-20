@@ -55,8 +55,7 @@ public class RobotContainer extends CommandOpMode {
                         driveSub,
                         () -> applyDeadband(driverJoystick.getLeftY(), 0.05),  // Forward/back
                         () -> applyDeadband(driverJoystick.getLeftX(), 0.05),  // Strafe
-                        () -> applyDeadband(driverJoystick.getRightX(), 0.05), // Rotate
-                        () -> driverJoystick.getButton(GamepadKeys.Button.A)  // Field-centric toggle (true while held)
+                        () -> applyDeadband(driverJoystick.getRightX(), 0.05) // Rotate
                 )
         );
     }

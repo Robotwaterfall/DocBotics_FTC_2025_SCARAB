@@ -7,24 +7,23 @@ import java.util.function.Supplier;
 
 public class teleOpMecanumDriveCommand extends CommandBase {
 
+
     private final mecanumDriveSubsystem driveSub;
     private final Supplier<Double> xSupplier;
     private final Supplier<Double> ySupplier;
     private final Supplier<Double> rSupplier;
-    private final Supplier<Boolean> fieldCentricSupplier; // Optional toggle
 
     public teleOpMecanumDriveCommand(
             mecanumDriveSubsystem driveSub,
             Supplier<Double> xSupplier,
             Supplier<Double> ySupplier,
-            Supplier<Double> rSupplier,
-            Supplier<Boolean> fieldCentricSupplier) {
+            Supplier<Double> rSupplier
+            ) {
 
         this.driveSub = driveSub;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.rSupplier = rSupplier;
-        this.fieldCentricSupplier = fieldCentricSupplier;
         addRequirements(driveSub);
     }
 
