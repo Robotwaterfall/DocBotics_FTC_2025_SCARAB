@@ -4,14 +4,19 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Command.strafe_to_targetCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
+import org.firstinspires.ftc.teamcode.Subsystem.limelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
 
 @TeleOp(name = "TeleOpMode")
 public class RobotContainer extends CommandOpMode {
     private mecanumDriveSubsystem driveSub;
+    private limelightSubsystem llSub;
     private GamepadEx driverJoystick;
 
     @Override
@@ -25,6 +30,8 @@ public class RobotContainer extends CommandOpMode {
                 new Motor(hardwareMap, "back_right"),
                 hardwareMap
         );
+
+        llSub = new limelightSubsystem(hardwareMap);
 
         driverJoystick = new GamepadEx(gamepad1);
 
@@ -49,8 +56,6 @@ public class RobotContainer extends CommandOpMode {
          * unless a different Op mode is selected
          */
         driveSub.setDefaultCommand(
-
-
                 new teleOpMecanumDriveCommand(
                         driveSub,
                         () -> applyDeadband(driverJoystick.getLeftY(), 0.05),  // Forward/back
@@ -58,6 +63,14 @@ public class RobotContainer extends CommandOpMode {
                         () -> applyDeadband(driverJoystick.getRightX(), 0.05) // Rotate
                 )
         );
+
+        driverJoystick.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(() -> {
+                    // Schedule the command manually
+                    new strafe_to_targetCMD(driveSub, llSub).schedule();
+                });
+
+
     }
 
     private void runCommands() {

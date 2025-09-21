@@ -33,9 +33,8 @@ public class mecanumDriveSubsystem extends SubsystemBase {
      * @param forward forward/backward input (-1 to 1)
      * @param strafe left/right input (-1 to 1)
      * @param rotation rotation input (-1 to 1)
-     * @param fieldCentric whether to use field-centric control
      */
-    public void drive(double forward, double strafe, double rotation, boolean fieldCentric) {
+    public void drive(double forward, double strafe, double rotation) {
         // Apply deadzone
         forward = applyDeadzone(forward, 0.05);
         strafe  = applyDeadzone(strafe, 0.05);
@@ -45,13 +44,6 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         strPower = strafe;
         rotPower = rotation;
 
-        // Field-centric transform
-        if (fieldCentric) {
-            double heading = -getHeading(); // Negate if needed
-            double temp = forward * Math.cos(heading) + strafe * Math.sin(heading);
-            strafe = -forward * Math.sin(heading) + strafe * Math.cos(heading);
-            forward = temp;
-        }
 
         // Mecanum kinematics
         double fl = forward + strafe + rotation;
@@ -78,13 +70,6 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         return Math.abs(value) > threshold ? value : 0;
     }
 
-    // --- Placeholder heading method ---
-    // Replace this with your IMU code
-    public double getHeading() {
-        // Return robot heading in radians
-        // Example: imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return 0.0;
-    }
 
     @Override
     public void periodic() {
@@ -97,7 +82,6 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         packet.put("FR Power", m_Fr.get());
         packet.put("BL Power", m_Rl.get());
         packet.put("BR Power", m_Rr.get());
-        packet.put("Heading (deg)", Math.toDegrees(getHeading()));
         dashboard.sendTelemetryPacket(packet);
     }
 }

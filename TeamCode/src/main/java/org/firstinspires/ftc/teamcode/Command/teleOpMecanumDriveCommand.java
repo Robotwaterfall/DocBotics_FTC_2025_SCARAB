@@ -34,10 +34,8 @@ public class teleOpMecanumDriveCommand extends CommandBase {
         double strafe  = xSupplier.get();
         double rotation = rSupplier.get();
 
-        // Field-centric toggle
-        boolean fieldCentric = fieldCentricSupplier.get();
 
         // Pass values to the subsystem drive method
-        driveSub.drive(forward, strafe, rotation, fieldCentric);
+        driveSub.drive(forward, strafe, rotation);
     }
 }
