@@ -21,7 +21,7 @@ public class rotateToTargetCMD extends CommandBase {
     public void execute(){
         if(llSub.hasTarget()) {
             double error = llSub.getTx(); //horizontal offset in degrees
-            double rotPower = error * kPRotation; //negative to correct direction
+            double rotPower = error * kPRotation;
             //clipped power to [-0.4, 0.4] for safety
             rotPower = Math.max(Math.min(rotPower, 0.4), -0.4);
 
