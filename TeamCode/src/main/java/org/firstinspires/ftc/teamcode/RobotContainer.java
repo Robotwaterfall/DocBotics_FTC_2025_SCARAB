@@ -4,13 +4,10 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Command.drive_straight_to_distanceCMD;
-import org.firstinspires.ftc.teamcode.Command.strafe_to_targetCMD;
+import org.firstinspires.ftc.teamcode.Command.rotateToTargetCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Subsystem.limelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
@@ -69,7 +66,7 @@ public class RobotContainer extends CommandOpMode {
         driverJoystick.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(() -> {
                     // Schedule the command manually
-                    new strafe_to_targetCMD(driveSub, llSub).schedule();
+                    new rotateToTargetCMD(driveSub, llSub).schedule();
                 });
         driverJoystick.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(() -> {

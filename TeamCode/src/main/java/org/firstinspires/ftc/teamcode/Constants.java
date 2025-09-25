@@ -8,9 +8,7 @@ public class Constants {
     public static final double camera_Angle         = 75.0;
 
     // =======PID Gains=======
-    public static final double kPForward            = 0.6;
     public static final double kPRotation           = 0.05;
-    public static final double kPStrafe             = 0.05;
 
     // =======Tolerance and Deadband=======
     public static final double tolerance            = 0.05; //offset of the rotation and forwarding
