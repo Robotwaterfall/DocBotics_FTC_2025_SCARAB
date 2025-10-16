@@ -1,3 +1,4 @@
+import static org.firstinspires.ftc.teamcode.Constants.drivetrain_ka;
 import static org.firstinspires.ftc.teamcode.Constants.drivetrain_ks;
 import static org.firstinspires.ftc.teamcode.Constants.drivetrain_kv;
 import static org.firstinspires.ftc.teamcode.Constants.soos_Angular_scaler;
@@ -48,6 +49,7 @@ public class SOOS_Feedforwardtests extends OpMode {
         double otos_speed = Math.hypot(myOtos.getVelocity().x , myOtos.getVelocity().y) * soos_Linear_scaler;
         double otos_acceleration = Math.hypot(myOtos.getAcceleration().x , myOtos.getAcceleration().y) * soos_Linear_scaler;
 
+
         //SOOS is rotated 90 degrees from recomend configuration
         // so readings for x and y need to be swapped
 
@@ -64,7 +66,7 @@ public class SOOS_Feedforwardtests extends OpMode {
 
 
 
-        feedforward = drivetrain_ks + otos_speed * drivetrain_kv;
+        feedforward = drivetrain_ks + otos_speed * drivetrain_kv + otos_acceleration * drivetrain_ka;
         if(gamepadEx.isDown(GamepadKeys.Button.A)) {
             front_left.set(feedforward);
             front_right.set(feedforward);

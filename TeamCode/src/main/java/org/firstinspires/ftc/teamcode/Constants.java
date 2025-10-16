@@ -10,12 +10,12 @@ public class Constants {
 
     //drivetrain feedforward constants
 
-    //measured at 13.5V
-    public static double  drivetrain_ks = 0.085;
+    //measured at 13.4V
+    public static double  drivetrain_ks = 0.09;
     //measured at 13.2V
     public static double  drivetrain_kv = 0.00945;
-    //measured at 13.7
-    public static double  drivetrain_ka = 0;
+    //measured at 13.2
+    public static double  drivetrain_ka = 0.00124;
 
 
 
