@@ -1,9 +1,20 @@
+import static org.firstinspires.ftc.teamcode.Constants.drivetrain_ks;
+import static org.firstinspires.ftc.teamcode.Constants.drivetrain_kv;
+import static org.firstinspires.ftc.teamcode.Constants.soos_Angular_scaler;
+import static org.firstinspires.ftc.teamcode.Constants.soos_Linear_scaler;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,20 +24,60 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name = "SOOSFeedForwardTests")
 public class SOOS_Feedforwardtests extends OpMode {
-
-
+    private Motor front_left;
+    private Motor front_right;
+    private Motor back_left;
+    private Motor back_right;
+    private double feedforward;
     SparkFunOTOS myOtos;
-
+    private GamepadEx gamepadEx;
+    TelemetryPacket packet = new TelemetryPacket();
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
     public void init(){
+        gamepadEx = new GamepadEx(gamepad1);
         myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
-
+        front_left = new Motor(hardwareMap, "front_left");
+        front_right = new Motor(hardwareMap, "front_right");
+        back_left = new Motor(hardwareMap, "back_left");
+        back_right = new Motor(hardwareMap, "back_right");
     }
 
 
 
     public void loop(){
+        double otos_speed = Math.hypot(myOtos.getVelocity().x , myOtos.getVelocity().y) * soos_Linear_scaler;
+        double otos_acceleration = Math.hypot(myOtos.getAcceleration().x , myOtos.getAcceleration().y) * soos_Linear_scaler;
 
+        //SOOS is rotated 90 degrees from recomend configuration
+        // so readings for x and y need to be swapped
+
+        packet.put("SOOS X INCHES", myOtos.getPosition().y  * soos_Linear_scaler );
+        packet.put("SOOS Y INCHES", myOtos.getPosition().x * soos_Linear_scaler);
+        // + counter clockwise, - clockwise
+        packet.put("SOOS angle Degrees ", myOtos.getPosition().h * soos_Angular_scaler);
+
+        packet.put("SOOS Linear scaler ", soos_Linear_scaler );
+        packet.put("SOOS angular scaler ", soos_Angular_scaler);
+        packet.put("otos speed",otos_speed);
+        packet.put("otos_acceleration",otos_acceleration);
+        dashboard.sendTelemetryPacket(packet);
+
+
+
+        feedforward = drivetrain_ks + otos_speed * drivetrain_kv;
+        if(gamepadEx.isDown(GamepadKeys.Button.A)) {
+            front_left.set(feedforward);
+            front_right.set(feedforward);
+            back_left.set(-feedforward);
+            back_right.set(-feedforward);
         }
+        else{
+            front_left.set(0);
+            front_right.set(0);
+            back_left.set(0);
+            back_right.set(0);
+        }
+    }
     private void configureOtos() {
         telemetry.addLine("Configuring OTOS...");
         telemetry.update();
@@ -76,8 +127,8 @@ public class SOOS_Feedforwardtests extends OpMode {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        myOtos.setLinearScalar(1.0);
-        myOtos.setAngularScalar(1.0);
+        myOtos.setLinearScalar(1);
+        myOtos.setAngularScalar(1);
 
         // The IMU on the OTOS includes a gyroscope and accelerometer, which could
         // have an offset. Note that as of firmware version 1.0, the calibration

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystem;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Constants.soos_Angular_scaler;
+import static org.firstinspires.ftc.teamcode.Constants.soos_Linear_scaler;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -116,12 +118,12 @@ public class mecanumDriveSubsystem extends SubsystemBase {
 
         //SOOS is rotated 90 degrees from recomend configuration
         // so readings for x and y need to be swapped
-        packet.put("SOOS X INCHES", myOtos.getPosition().y * Constants.soos_Linear_scaler );
-        packet.put("SOOS Y INCHES", myOtos.getPosition().x * Constants.soos_Linear_scaler );
-        packet.put("SOOS angle Degrees ", myOtos.getPosition().h *Constants.soos_Angular_scaler);
-        packet.put("SOOS Linear scaler ", Constants.soos_Linear_scaler );
+        packet.put("SOOS X INCHES", myOtos.getPosition().y  * soos_Linear_scaler );
+        packet.put("SOOS Y INCHES", myOtos.getPosition().x * soos_Linear_scaler);
+        packet.put("SOOS angle Degrees ", myOtos.getPosition().h * soos_Angular_scaler);
+        packet.put("SOOS Linear scaler ", soos_Linear_scaler );
         // + counter clockwise, - clockwise
-        packet.put("SOOS angular scaler ", Constants.soos_Angular_scaler);
+        packet.put("SOOS angular scaler ", soos_Angular_scaler);
 
 
         dashboard.sendTelemetryPacket(packet);
@@ -211,8 +213,7 @@ public class mecanumDriveSubsystem extends SubsystemBase {
     public void resetOtosPos(){
         SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
         myOtos.setPosition(currentPosition);
-        myOtos.setLinearScalar(1.0);
-        myOtos.setAngularScalar(1.0);
+
     }
 
 }
