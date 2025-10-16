@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -24,8 +27,8 @@ public class RobotContainer extends CommandOpMode {
                 new Motor(hardwareMap, "front_left"),
                 new Motor(hardwareMap, "front_right"),
                 new Motor(hardwareMap, "back_left"),
-                new Motor(hardwareMap, "back_right")
-        );
+                new Motor(hardwareMap, "back_right"),
+                hardwareMap.get(SparkFunOTOS.class, "sensor_otos"));
 
         driverJoystick = new GamepadEx(gamepad1);
 
@@ -49,6 +52,8 @@ public class RobotContainer extends CommandOpMode {
          * Sets the joysticks to always work to drive the robot
          * unless a different Op mode is selected
          */
+
+
         driveSub.setDefaultCommand(
 
 
@@ -63,6 +68,7 @@ public class RobotContainer extends CommandOpMode {
     }
 
     private void runCommands() {
+        driveSub.resetOtosPos();
         // Add other commands here if needed
     }
 }

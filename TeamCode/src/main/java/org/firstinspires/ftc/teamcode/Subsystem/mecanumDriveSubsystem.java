@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class mecanumDriveSubsystem extends SubsystemBase {
 
     private final Motor m_Fl, m_Fr, m_Rl, m_Rr;
-    private final SparkFunOTOS myOtos =  hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+    private final SparkFunOTOS myOtos;
 
     // Store last joystick values for telemetry
     private double fwdPower, strPower, rotPower;
@@ -24,8 +24,9 @@ public class mecanumDriveSubsystem extends SubsystemBase {
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
     public mecanumDriveSubsystem(Motor frontLeft, Motor frontRight, Motor backLeft,
-                                 Motor backRight) {
+                                 Motor backRight, SparkFunOTOS otos) {
 
+        this.myOtos = otos;
         m_Fl = frontLeft;
         m_Fr = frontRight;
         m_Rl = backLeft;
@@ -110,10 +111,15 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         packet.put("BR Power", m_Rr.get());
         packet.put("Heading (deg) IMU", Math.toDegrees(getHeading()));
 
-        packet.put("SOOS X INCHES", myOtos.getPosition().x);
-        packet.put("SOOS Y INCHES", myOtos.getPosition().y);
-        packet.put("SOOS angle Degrees ", myOtos.getPosition().h);
 
+
+        //SOOS is rotated 90 degrees from recomend configuration
+        // so readings for x and y need to be swapped
+        packet.put("SOOS X INCHES", myOtos.getPosition().y * 1.65 );
+        packet.put("SOOS Y INCHES", myOtos.getPosition().x * 1.65);
+        packet.put("SOOS angle Degrees ", myOtos.getPosition().h);
+        packet.put("SOOS Linear scaler ", myOtos.getLinearScalar());
+        packet.put("SOOS angular scaler ", myOtos.getAngularScalar());
 
 
         dashboard.sendTelemetryPacket(packet);
@@ -146,7 +152,7 @@ public class mecanumDriveSubsystem extends SubsystemBase {
 
         // REF : RobotCentric
         // -x left +x Right
-        // -y right +y forward
+        // +y back -y forward
 
         SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-5.53, -5.03, 0);
         myOtos.setOffset(offset);
@@ -167,7 +173,7 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        myOtos.setLinearScalar(1.0);
+        myOtos.setLinearScalar(1.2426);
         myOtos.setAngularScalar(1.0);
 
         // The IMU on the OTOS includes a gyroscope and accelerometer, which could
@@ -199,4 +205,12 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         myOtos.getVersionInfo(hwVersion, fwVersion);
 
     }
+    //*resets the position readings on OTOS
+    public void resetOtosPos(){
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        myOtos.setPosition(currentPosition);
+        myOtos.setLinearScalar(1.2426);
+        myOtos.setAngularScalar(1.0);
+    }
+
 }
