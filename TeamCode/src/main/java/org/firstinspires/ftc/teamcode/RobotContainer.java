@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
 public class RobotContainer extends CommandOpMode {
     private mecanumDriveSubsystem driveSub;
     private GamepadEx driverJoystick;
+   ;
 
     @Override
     public void initialize() {
@@ -22,8 +24,7 @@ public class RobotContainer extends CommandOpMode {
                 new Motor(hardwareMap, "front_left"),
                 new Motor(hardwareMap, "front_right"),
                 new Motor(hardwareMap, "back_left"),
-                new Motor(hardwareMap, "back_right"),
-                hardwareMap
+                new Motor(hardwareMap, "back_right")
         );
 
         driverJoystick = new GamepadEx(gamepad1);
