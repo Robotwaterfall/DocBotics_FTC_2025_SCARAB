@@ -18,6 +18,12 @@ public class Constants {
     public static double  drivetrain_ka = 0.00124;
 
 
+    //drivetrain Trapezoidal drive constants
+    public static double drivetrain_maxAccel = 10.0; //inches/sec^2
+    public static double drivetrain_maxVelocity = 15.0; //inches/sec
+    public static double drivetrain_targetDistance = 20.0; // Measured in inches
+
+
 
     private Constants() { }
 
