@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystem;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Constants.soos_Angular_scaler;
 import static org.firstinspires.ftc.teamcode.Constants.soos_Linear_scaler;
 
@@ -9,19 +8,40 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Constants;
 
 public class mecanumDriveSubsystem extends SubsystemBase {
 
     private final Motor m_Fl, m_Fr, m_Rl, m_Rr;
     private final SparkFunOTOS myOtos;
-    public double SOOS_x = 0;
-    public double SOOS_y = 0;
-    public double SOOS_h = 0;
+
+    /**Robot Centric, forward/backward displacement from start. In Inches.*/
+    public double SOOS_x_inches = 0;
+    /**Robot Centric, Left/Right displacement from start. In Inches.*/
+    public double SOOS_y_inches = 0;
+    /**Robot Centric, counterclockwise angle  from start. In Degrees.*/
+    public double SOOS_h_degrees = 0;
+
+    /** Magnitude of robot velocity in inch/sec. */
+    public double SOOS_Speed_inchesPerSec = 0;
+    /** x component of robot velocity in inch/sec. */
+    public double SOOS_Velocity_x_inchesPerSec = 0;
+    /** y component of robot velocity in inch/sec. */
+    public double SOOS_Velocity_y_inchesPerSec = 0;
+    /** h component of robot velocity in inch/sec. */
+    public double SOOS_Velocity_h_degreesPerSec = 0;
+
+
+    /** Magnitude of robot acceleration in inch/sec^2. */
+    public double SOOS_Acceleration_inchesPerSecSquared = 0;
+    /** x component of robot acceleration in inch/sec^2. */
+    public double SOOS_Acceleration_x_inchesPerSecSqaured = 0;
+    /** y component of robot acceleration in inch/sec^2. */
+    public double SOOS_Acceleration_y_inchesPerSecSquared = 0;
+    /** h component of robot acceleration in degrees/sec^2. */
+    public double SOOS_Acceleration_h_degreesPerSecSquared = 0;
 
     // Store last joystick values for telemetry
     private double fwdPower, strPower, rotPower;
@@ -123,14 +143,36 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         //update SOOS robot position
         //SOOS is rotate 90 degrees from what the robot should be,
         // so readings for x and y need to be swapped.
-        SOOS_x = myOtos.getPosition().y  * soos_Linear_scaler;
-        SOOS_y = myOtos.getPosition().x * soos_Linear_scaler;
-        SOOS_h = myOtos.getPosition().h * soos_Angular_scaler;
-        //send SOOS telemetry.
+        SOOS_x_inches = myOtos.getPosition().y  * soos_Linear_scaler;
+        SOOS_y_inches = myOtos.getPosition().x * soos_Linear_scaler;
+        SOOS_h_degrees = myOtos.getPosition().h * soos_Angular_scaler;
+        //Update robot velocity.
+        SOOS_Speed_inchesPerSec = Math.hypot(myOtos.getVelocity().x, myOtos.getVelocity().y);
+        SOOS_Velocity_x_inchesPerSec = myOtos.getVelocity().x;
+        SOOS_Velocity_y_inchesPerSec = myOtos.getVelocity().y;
+        SOOS_Velocity_h_degreesPerSec = myOtos.getVelocity().h;
+        //Update robot acceleration.
+        SOOS_Acceleration_inchesPerSecSquared = Math.hypot(myOtos.getAcceleration().x, myOtos.getAcceleration().y);
+        SOOS_Acceleration_x_inchesPerSecSqaured = myOtos.getAcceleration().x;
+        SOOS_Acceleration_y_inchesPerSecSquared = myOtos.getAcceleration().y;
+        SOOS_Acceleration_h_degreesPerSecSquared = myOtos.getAcceleration().h;
 
-        packet.put("SOOS X INCHES", SOOS_x);
-        packet.put("SOOS Y INCHES", SOOS_y);
-        packet.put("SOOS angle Degrees ", SOOS_h);
+        //send SOOS telemetry.
+        packet.put("SOOS X INCHES", SOOS_x_inches);
+        packet.put("SOOS Y INCHES", SOOS_y_inches);
+        packet.put("SOOS angle Degrees ", SOOS_h_degrees);
+
+        packet.put("SOOS Speed inchesPerSec", SOOS_Speed_inchesPerSec);
+        packet.put("SOOS Velocity x inchesPerSec", SOOS_Velocity_x_inchesPerSec);
+        packet.put("SOOS Velocity x inchesPerSec", SOOS_Velocity_y_inchesPerSec);
+        packet.put("SOOS Velocity h degreesPerSec", SOOS_Velocity_h_degreesPerSec);
+
+        packet.put("SOOS Acceleration inchesPerSecSqaured", SOOS_Acceleration_inchesPerSecSquared);
+        packet.put("SOOS Acceleration y inchesPerSecSqaured", SOOS_Acceleration_y_inchesPerSecSquared);
+        packet.put("SOOS Acceleration x inchesPerSecSquared", SOOS_Acceleration_x_inchesPerSecSqaured);
+        packet.put("SOOS Acceleration h inchesPerSecSquare", SOOS_Acceleration_h_degreesPerSecSquared);
+
+
         packet.put("SOOS Linear scaler ", soos_Linear_scaler );
         // + counter clockwise, - clockwise
         packet.put("SOOS angular scaler ", soos_Angular_scaler);

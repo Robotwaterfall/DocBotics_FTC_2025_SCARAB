@@ -30,6 +30,17 @@ public class Constants {
     public static double drivetrain_targetDistance = 45.0; // Measured in inches
 
 
+    public static double linearMaxSpeedError = 0.001;
+    public static double xSpeedController_kp = 0;
+    public static double xSpeedController_kd = 0;
+
+    public static double ySpeedController_kp = 0;
+    public static double ySpeedController_kd = 0;
+
+    public static double angularMaxSpeedError = 0.001;
+    public static double angularSpeedController_kp = 0;
+    public static double angularSpeedController_kd = 0;
+
     private Constants() { }
 
 }
