@@ -1,32 +1,57 @@
 package org.firstinspires.ftc.teamcode.Subsystem;
 
+import static org.firstinspires.ftc.teamcode.Constants.countsPerRevolution;
+import static org.firstinspires.ftc.teamcode.Constants.gearRatio;
+import static org.firstinspires.ftc.teamcode.Constants.kPx;
+import static org.firstinspires.ftc.teamcode.Constants.wheelDiameter;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class mecanumDriveSubsystem extends SubsystemBase {
 
-    private final Motor m_Fl, m_Fr, m_Rl, m_Rr;
+    private final DcMotor m_Fl, m_Fr, m_Rl, m_Rr;
 
     // Store last joystick values for telemetry
     private double fwdPower, strPower, rotPower;
 
+    double motorFwd = 0;
+
+    double DistancePerTick = (Math.PI * wheelDiameter) / (countsPerRevolution * gearRatio);
+
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    public mecanumDriveSubsystem(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight, HardwareMap hardwareMap) {
+    public mecanumDriveSubsystem(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight, HardwareMap hardwareMap) {
         m_Fl = frontLeft;
         m_Fr = frontRight;
         m_Rl = backLeft;
         m_Rr = backRight;
 
         // Set motor directions (typical mecanum setup)
-        m_Fl.setInverted(false);
-        m_Fr.setInverted(true);
-        m_Rl.setInverted(false);
-        m_Rr.setInverted(true);
+        m_Fl.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_Fr.setDirection(DcMotorSimple.Direction.REVERSE);
+        m_Rl.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_Rr.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
+    public void resetDriveEncoders() {
+        m_Fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_Fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_Rl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_Rr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        m_Fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_Fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_Rl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_Rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
 
     /**
      * Drive method for teleop.
@@ -59,16 +84,57 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         br /= max;
 
         // Set motor powers
-        m_Fl.set(fl);
-        m_Fr.set(fr);
-        m_Rl.set(bl);
-        m_Rr.set(br);
+        m_Fl.setPower(fl);
+        m_Fr.setPower(fr);
+        m_Rl.setPower(bl);
+        m_Rr.setPower(br);
     }
 
     // Deadzone helper
     private double applyDeadzone(double value, double threshold) {
         return Math.abs(value) > threshold ? value : 0;
     }
+    public double getYinches(){
+        double Fl = m_Fl.getCurrentPosition();
+        double Fr = m_Fr.getCurrentPosition();
+        double Bl = m_Rl.getCurrentPosition();
+        double Br = m_Rr.getCurrentPosition();
+
+        double forwardError = (Fl - Fr - Bl + Br) / 4.0;
+
+        double forwardMovement = forwardError * DistancePerTick;
+
+
+        return forwardMovement;
+
+    }
+
+    public double getXinches(){
+        double Fl = m_Fl.getCurrentPosition();
+        double Fr = m_Fr.getCurrentPosition();
+        double Bl = m_Rl.getCurrentPosition();
+        double Br = m_Rr.getCurrentPosition();
+
+        double lateralError = (Fl + Fr + Bl + Br) / 4.0;
+
+        double lateralMovement = lateralError * DistancePerTick;
+
+
+        return lateralMovement;
+
+    }
+
+    public void xCordinate(double desiredX) {
+        double error = getXinches() - desiredX;
+
+        motorFwd = error * kPx;
+
+        motorFwd = Math.min(Math.max(motorFwd, -1.0), 1.0);
+
+        drive(motorFwd,0,0);
+    }
+
+
 
 
     @Override
@@ -78,10 +144,13 @@ public class mecanumDriveSubsystem extends SubsystemBase {
         packet.put("Forward", fwdPower);
         packet.put("Strafe", strPower);
         packet.put("Rotation", rotPower);
-        packet.put("FL Power", m_Fl.get());
-        packet.put("FR Power", m_Fr.get());
-        packet.put("BL Power", m_Rl.get());
-        packet.put("BR Power", m_Rr.get());
+        packet.put("FL Power", m_Fl.getPower());
+        packet.put("FR Power", m_Fr.getPower());
+        packet.put("BL Power", m_Rl.getPower());
+        packet.put("BR Power", m_Rr.getPower());
+        packet.put("distanceSidewaysInches", getXinches());
+        packet.put("distanceForwardInches", getYinches());
+        packet.put("distanceFromSetpoint", motorFwd);
         dashboard.sendTelemetryPacket(packet);
     }
 }

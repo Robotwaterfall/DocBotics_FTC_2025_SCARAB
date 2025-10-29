@@ -37,28 +37,12 @@ public class teleOpMecanumDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if(llsub.hasTarget()) {
-            //gets the joystick values
-            double forward = ySupplier.get();
-            double strafe  = xSupplier.get();
-
-            double error = llsub.getTx(); //horizontal offset in degrees
-            double rotPower = error * kPRotation;
-
-            //clipped power to [-0.4, 0.4] for safety
-            rotPower = Math.max(Math.min(rotPower, 0.4), -0.4);
-
-            double strPower = rotPower;
-
-            driveSub.drive(forward, strafe, rotPower); //rot only
-        } else {
-            //Normal teleoperated drive if limelight does not see april tag
+            //Normal teleoperated drive
             double forward = ySupplier.get();
             double strafe  = xSupplier.get();
             double rotation = rSupplier.get();
 
             driveSub.drive(forward, strafe, rotation);
-        }
 
     }
 }

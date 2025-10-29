@@ -5,9 +5,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Command.rotateToTargetCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
+import org.firstinspires.ftc.teamcode.Command.testAutoCMD;
 import org.firstinspires.ftc.teamcode.Subsystem.limelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
 
@@ -17,15 +18,16 @@ public class RobotContainer extends CommandOpMode {
     private limelightSubsystem llSub;
     private GamepadEx driverJoystick;
 
+
     @Override
     public void initialize() {
 
         // Mecanum Motor binding
         driveSub = new mecanumDriveSubsystem(
-                new Motor(hardwareMap, "front_left"),
-                new Motor(hardwareMap, "front_right"),
-                new Motor(hardwareMap, "back_left"),
-                new Motor(hardwareMap, "back_right"),
+                hardwareMap.get(DcMotor.class, "front_left"),
+                hardwareMap.get(DcMotor.class, "front_right"),
+                hardwareMap.get(DcMotor.class, "back_left"),
+                hardwareMap.get(DcMotor.class, "back_right"),
                 hardwareMap
         );
 
@@ -62,6 +64,10 @@ public class RobotContainer extends CommandOpMode {
                 )
         );
 
+
+
+
+
         /*
         commented out the rotate to target command for testing purposes
         **/
@@ -77,5 +83,7 @@ public class RobotContainer extends CommandOpMode {
 
     private void runCommands() {
         // Add other commands here if needed
+
+
     }
 }

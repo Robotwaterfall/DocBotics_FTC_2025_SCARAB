@@ -12,6 +12,7 @@ public class Constants {
 
     // =======PID Gains=======
     public static  double kPRotation           = 0.02;
+    public static double kPx                   = 0.02;
 
     // =======Tolerance and Deadband=======
     public static  double tolerance            = 0.05; //offset of the rotation and forwarding
@@ -19,6 +20,11 @@ public class Constants {
 
     // =======Target Setpoints=======
     public static  double targetDistanceMeters = 2;
+
+    // =======Configurations========
+    public static final int wheelDiameter = 3; //measured in inches
+    public static final int countsPerRevolution = 28;
+    public static final int gearRatio = 21;
 
 
     private Constants() { }
