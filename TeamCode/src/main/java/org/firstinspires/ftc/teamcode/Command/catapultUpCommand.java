@@ -13,7 +13,7 @@ import java.sql.Time;
 
 public class catapultUpCommand extends CommandBase {
 
-    private catapultSubsystem cataSub;
+    private final catapultSubsystem cataSub;
 
     private ElapsedTime cataUpTime = new ElapsedTime();
 

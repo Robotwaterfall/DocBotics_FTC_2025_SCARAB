@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Subsystem.catapultSubsystem;
 
 public class catapultDownCommand extends CommandBase {
-        private catapultSubsystem cataSub;
+        private final catapultSubsystem cataSub;
         private ElapsedTime cataDownTime = new ElapsedTime();
 
         public catapultDownCommand(catapultSubsystem cataSub){
