@@ -5,18 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Auto.MoveRobotEncoderXY_CMD;
 import org.firstinspires.ftc.teamcode.Auto.autoRobotContainer;
-import org.firstinspires.ftc.teamcode.Auto.waitCommand;
 
 @Autonomous
-public class driveForward extends autoRobotContainer {
+public class Threeartificat_FarLeft extends autoRobotContainer {
 
     @Override
     public void path() {
 
         schedule(new SequentialCommandGroup(
-
-                new MoveRobotEncoderXY_CMD(20,20,3,0.6, driveSub)
-
+                new MoveRobotEncoderXY_CMD(20,20,3,0.8,driveSub),
+                new MoveRobotEncoderXY_CMD(30,-30,2,0.8,driveSub),
+                new MoveRobotEncoderXY_CMD(25,25,3, 0.8, driveSub)
         ));
     }
 }
