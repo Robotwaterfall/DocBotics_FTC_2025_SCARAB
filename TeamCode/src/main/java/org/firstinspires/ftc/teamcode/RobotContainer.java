@@ -39,9 +39,9 @@ public class RobotContainer extends CommandOpMode {
                 hardwareMap
         );
 
-       // intakeSub = new intakeSubsystem(
-         //       hardwareMap.get(DcMotor.class,"intake_Motor")
-       // );
+        intakeSub = new intakeSubsystem(
+                hardwareMap.get(DcMotor.class,"intake_Motor")
+        );
 
         cataSub = new catapultSubsystem(
                 hardwareMap.get(DcMotor.class, "CatapultMotor1"),
@@ -88,12 +88,15 @@ public class RobotContainer extends CommandOpMode {
                 )
         );
 
-       // intakeSub.setDefaultCommand(
-        //        new teleOpIntakeCommand(
-          //              intakeSub,
-          //              () -> driverJoystick.getButton(GamepadKeys.Button.A)
-           //     )
-        //);
+        intakeSub.setDefaultCommand(
+                new teleOpIntakeCommand(
+                        intakeSub,
+                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
+                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
+                )
+        );
+
+
 
         driverJoystick.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(new SequentialCommandGroup(

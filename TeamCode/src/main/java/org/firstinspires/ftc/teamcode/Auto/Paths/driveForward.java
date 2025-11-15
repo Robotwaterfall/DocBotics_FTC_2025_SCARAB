@@ -19,13 +19,7 @@ public class driveForward extends autoRobotContainer {
 
         schedule(new SequentialCommandGroup(
 
-                new MoveRobotEncoderXY_CMD(15,15,3,0.4, driveSub),
-                new MoveRobotEncoderXY_CMD(15,-15,2,0.4,driveSub),
-                new SequentialCommandGroup(
-                        new catapultCommand(cataSub, cata_Up_setpoint),
-                        new catapultCommand(cataSub, cata_Down_setpoint)
-                )
-
+                new MoveRobotEncoderXY_CMD(15,15,3,0.4, driveSub)
         ));
     }
 }

@@ -3,20 +3,22 @@ package org.firstinspires.ftc.teamcode.Command;
 import static org.firstinspires.ftc.teamcode.Constants.intake_POWER;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.qualcomm.hardware.lynx.Supplier;
 
 import org.firstinspires.ftc.teamcode.Subsystem.intakeSubsystem;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 public class teleOpIntakeCommand extends CommandBase {
     intakeSubsystem intakeSub;
-    private boolean toggleState = false;
-    private boolean lastToggleState = false;
-    BooleanSupplier buttonSupplier;
+    DoubleSupplier rightTriggerSupplier;
+    DoubleSupplier leftTriggerSupplier;
 
-    public teleOpIntakeCommand(intakeSubsystem intakeSub, BooleanSupplier buttonSupplier){
+    public teleOpIntakeCommand(intakeSubsystem intakeSub, DoubleSupplier rightTriggerSupplier, DoubleSupplier leftTriggerSupplier ){
         this.intakeSub = intakeSub;
-        this.buttonSupplier = buttonSupplier;
+        this.rightTriggerSupplier = rightTriggerSupplier;
+        this.leftTriggerSupplier = leftTriggerSupplier;
         addRequirements(intakeSub);
     }
 
@@ -28,17 +30,13 @@ public class teleOpIntakeCommand extends CommandBase {
 
     @Override
     public void execute(){
-        boolean currentButtonState = buttonSupplier.getAsBoolean();
-        if(currentButtonState && !lastToggleState){
-            toggleState = !toggleState;
-        }
-        lastToggleState = currentButtonState;
 
-        if(toggleState){
-            intakeSub.setM_intakeMotorPower(intake_POWER); //power set to 80%
-        } else {
-            intakeSub.setM_intakeMotorPower(0);
-        }
+        double rightT = rightTriggerSupplier.getAsDouble();
+        double leftT = leftTriggerSupplier.getAsDouble();
+
+        intakeSub.setM_intakeMotorPower(rightT);
+
+        intakeSub.setM_intakeMotorPower(-leftT);
 
     }
 
