@@ -7,12 +7,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Command.catapultCommand;
+import org.firstinspires.ftc.teamcode.Command.powerIntakeCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpIntakeCommand;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Subsystem.catapultSubsystem;
@@ -78,6 +80,14 @@ public class RobotContainer extends CommandOpMode {
          * Sets the joysticks to always work to drive the robot
          * unless a different Op mode is selected
          */
+
+        GamepadButton intake_Button = new GamepadButton(driverJoystick, GamepadKeys.Button.DPAD_UP);
+        GamepadButton outake_Button = new GamepadButton(driverJoystick, GamepadKeys.Button.DPAD_DOWN);
+
+        //TODO CHECK Diretion an speed
+        intake_Button.whenHeld(new powerIntakeCMD(intakeSub,0.4));
+        outake_Button.whenHeld(new powerIntakeCMD(intakeSub,-0.4));
+
         driveSub.setDefaultCommand(
                new teleOpMecanumDriveCommand(
                         driveSub,
@@ -87,16 +97,11 @@ public class RobotContainer extends CommandOpMode {
                 )
         );
 
-        intakeSub.setDefaultCommand(
-                new teleOpIntakeCommand(
-                        intakeSub,
-                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
-                )
-
-
-
-
-        );
+//        intakeSub.setDefaultCommand(
+//                new teleOpIntakeCommand(
+//                        intakeSub,
+//                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
+//                )
 
 
 
@@ -105,6 +110,8 @@ public class RobotContainer extends CommandOpMode {
 //                        new catapultCommand(cataSub, cata_Up_setpoint),
 //                        new catapultCommand(cataSub, cata_Down_setpoint)
 //                ));
+
+
 
 
 
