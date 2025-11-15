@@ -81,10 +81,12 @@ public class RobotContainer extends CommandOpMode {
          * unless a different Op mode is selected
          */
 
+        //Intake buttons.
         GamepadButton intake_Button = new GamepadButton(driverJoystick, GamepadKeys.Button.DPAD_UP);
         GamepadButton outake_Button = new GamepadButton(driverJoystick, GamepadKeys.Button.DPAD_DOWN);
 
         //TODO CHECK Diretion an speed
+
         intake_Button.whenHeld(new powerIntakeCMD(intakeSub,0.4));
         outake_Button.whenHeld(new powerIntakeCMD(intakeSub,-0.4));
 

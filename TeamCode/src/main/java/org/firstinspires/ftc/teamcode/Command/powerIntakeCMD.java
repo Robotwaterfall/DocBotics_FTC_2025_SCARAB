@@ -17,22 +17,20 @@ public class powerIntakeCMD extends CommandBase {
     }
     @Override
     public void initialize(){
+        //turn off power to intake motors.
         intakeSub.setM_intakeMotorPower(0);
 
     }
 
     @Override
     public void execute(){
-
-
-
+        //set intake motors to desired speeds
         intakeSub.setM_intakeMotorPower(power);
-
-
     }
 
     @Override
     public void end(boolean interrupted) {
+        // When Command ends stop intake motors
         intakeSub.setM_intakeMotorPower(0);
     }
 }
