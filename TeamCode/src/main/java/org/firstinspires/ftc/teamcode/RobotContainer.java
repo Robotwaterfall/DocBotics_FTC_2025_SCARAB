@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.Constants.cata_Down_setpoint;
 import static org.firstinspires.ftc.teamcode.Constants.cata_Up_setpoint;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -22,8 +24,10 @@ public class RobotContainer extends CommandOpMode {
     private mecanumDriveSubsystem driveSub;
     private intakeSubsystem intakeSub;
 
-    private catapultSubsystem cataSub;
+//    private catapultSubsystem cataSub;
     private GamepadEx driverJoystick;
+
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
     @Override
     public void initialize() {
@@ -41,10 +45,10 @@ public class RobotContainer extends CommandOpMode {
                 hardwareMap.get(DcMotor.class,"intake_Motor")
         );
 
-        cataSub = new catapultSubsystem(
-                hardwareMap.get(DcMotor.class, "CatapultMotor1"),
-                hardwareMap.get(DcMotor.class, "CatapultMotor2")
-        );
+//        cataSub = new catapultSubsystem(
+//                hardwareMap.get(DcMotor.class, "CatapultMotor1"),
+//                hardwareMap.get(DcMotor.class, "CatapultMotor2")
+//        );
 
 
 
@@ -86,18 +90,21 @@ public class RobotContainer extends CommandOpMode {
         intakeSub.setDefaultCommand(
                 new teleOpIntakeCommand(
                         intakeSub,
-                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
                         () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
                 )
+
+
+
+
         );
 
 
 
-        driverJoystick.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new SequentialCommandGroup(
-                        new catapultCommand(cataSub, cata_Up_setpoint),
-                        new catapultCommand(cataSub, cata_Down_setpoint)
-                ));
+//        driverJoystick.getGamepadButton(GamepadKeys.Button.B)
+//                .whenPressed(new SequentialCommandGroup(
+//                        new catapultCommand(cataSub, cata_Up_setpoint),
+//                        new catapultCommand(cataSub, cata_Down_setpoint)
+//                ));
 
 
 
