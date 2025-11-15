@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
 public class RobotContainer extends CommandOpMode {
     private mecanumDriveSubsystem driveSub;
     private intakeSubsystem intakeSub;
+    private catapultSubsystem cataSub;
 
 //    private catapultSubsystem cataSub;
     private GamepadEx driverJoystick;
@@ -87,8 +88,8 @@ public class RobotContainer extends CommandOpMode {
         Trigger outake_Trigger = new Trigger(() -> {return driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8;} );
         //TODO CHECK Direction an speed
 
-        intake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,0.4));
-        outake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,-0.4));
+        intake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,1.0));
+        outake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,-1.0));
 
 
         driveSub.setDefaultCommand(
@@ -100,18 +101,12 @@ public class RobotContainer extends CommandOpMode {
                 )
         );
 
-//        intakeSub.setDefaultCommand(
-//                new teleOpIntakeCommand(
-//                        intakeSub,
-//                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
-//                )
 
 
 
 //        driverJoystick.getGamepadButton(GamepadKeys.Button.B)
 //                .whenPressed(new SequentialCommandGroup(
-//                        new catapultCommand(cataSub, cata_Up_setpoint),
-//                        new catapultCommand(cataSub, cata_Down_setpoint)
+//                        new catapultCommand()
 //                ));
 
 
