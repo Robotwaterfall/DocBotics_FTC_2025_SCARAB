@@ -1,20 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Constants.cata_Down_setpoint;
-import static org.firstinspires.ftc.teamcode.Constants.cata_Up_setpoint;
+import static org.firstinspires.ftc.teamcode.Constants.intake_POWER;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Command.catapultCommand;
-import org.firstinspires.ftc.teamcode.Command.holdCatapultCMD;
-import org.firstinspires.ftc.teamcode.Command.teleOpIntakeCommand;
+import org.firstinspires.ftc.teamcode.Command.powerIntakeCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
-import org.firstinspires.ftc.teamcode.Subsystem.catapultSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.intakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
 
@@ -23,8 +19,6 @@ public class RobotContainer extends CommandOpMode {
     private mecanumDriveSubsystem driveSub;
     private intakeSubsystem intakeSub;
 
-    private holdCatapultCMD holdCata;
-    private catapultSubsystem cataSub;
     private GamepadEx driverJoystick;
 
     @Override
@@ -43,15 +37,6 @@ public class RobotContainer extends CommandOpMode {
                 hardwareMap.get(DcMotor.class,"intake_Motor")
         );
 
-        cataSub = new catapultSubsystem(
-                hardwareMap.get(DcMotor.class, "CatapultMotor1"),
-                hardwareMap.get(DcMotor.class, "CatapultMotor2")
-        );
-
-        // Create your hold command
-        holdCata = new holdCatapultCMD(cataSub);
-
-
 
 
         driverJoystick = new GamepadEx(gamepad1);
@@ -59,7 +44,7 @@ public class RobotContainer extends CommandOpMode {
         runCommands();
         setDefaultCommands();
 
-        holdCata.schedule();
+
 
     }
 
@@ -84,25 +69,22 @@ public class RobotContainer extends CommandOpMode {
                         driveSub,
                         () -> applyDeadband(driverJoystick.getLeftY(), 0.05),  // Forward/back
                         () -> applyDeadband(driverJoystick.getLeftX(), 0.05),  // Strafe
-                        () -> applyDeadband(driverJoystick.getRightX(), 0.05) // Rotate
+                        () -> applyDeadband(driverJoystick.getRightX(), 0.05)  // Rotate
                 )
         );
 
-        intakeSub.setDefaultCommand(
-                new teleOpIntakeCommand(
-                        intakeSub,
-                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
-                        () -> driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
-                )
-        );
+        //Intake triggers, When trigger input is greater than 0.8, the trigger is active.
+        Trigger intake_Trigger = new Trigger(() -> {return driverJoystick.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8;} );
+        Trigger outake_Trigger = new Trigger(() -> {return driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8;} );
+
+
+        intake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,intake_POWER));
+        outake_Trigger.whileActiveContinuous(new powerIntakeCMD(intakeSub,-intake_POWER));
 
 
 
-        driverJoystick.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new SequentialCommandGroup(
-                        new catapultCommand(cataSub, cata_Up_setpoint),
-                        new catapultCommand(cataSub, cata_Down_setpoint)
-                ));
+
+
 
 
 

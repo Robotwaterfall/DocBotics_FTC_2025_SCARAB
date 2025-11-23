@@ -1,15 +1,10 @@
 package org.firstinspires.ftc.teamcode.Auto.Paths;
 
-import static org.firstinspires.ftc.teamcode.Constants.cata_Down_setpoint;
-import static org.firstinspires.ftc.teamcode.Constants.cata_Up_setpoint;
-
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Auto.MoveRobotEncoderXY_CMD;
 import org.firstinspires.ftc.teamcode.Auto.autoRobotContainer;
-import org.firstinspires.ftc.teamcode.Auto.waitCommand;
-import org.firstinspires.ftc.teamcode.Command.catapultCommand;
 
 @Autonomous
 public class driveForward extends autoRobotContainer {
