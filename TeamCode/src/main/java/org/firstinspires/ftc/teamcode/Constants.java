@@ -8,6 +8,14 @@ public class Constants {
     // motor powers
     public static double intake_POWER = 1.0;
 
+    public static double min_Shooter_Power = 0.3;
+    public static  double max_Shooter_Power = 1.0;
+
+
+    //Limelight
+    public static double min_Ty = -10;
+    public static double max_Ty = 10;
+
 
 
     public static final class encoderAutoConstants{
