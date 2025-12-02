@@ -45,8 +45,7 @@ public class RobotContainer extends CommandOpMode {
 //        );
 
         shooterSub = new cShooterSubsystem(
-                hardwareMap.get(DcMotor.class, "shootermotor1"),
-                hardwareMap.get(DcMotor.class, "shootermotor2")//TODO: change shooter motor name
+                hardwareMap.get(DcMotor.class, "shootermotor1")
         );
 
         llsub = new limelightSubsystem(
