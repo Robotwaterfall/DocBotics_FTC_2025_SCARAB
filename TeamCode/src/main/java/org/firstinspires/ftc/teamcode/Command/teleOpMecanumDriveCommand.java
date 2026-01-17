@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Command;
 
+import static org.firstinspires.ftc.teamcode.Constants.clippedRotPower;
 import static org.firstinspires.ftc.teamcode.Constants.kPRotation;
 
 import com.arcrobotics.ftclib.command.CommandBase;
@@ -18,13 +19,15 @@ public class teleOpMecanumDriveCommand extends CommandBase {
     private final Supplier<Double> xSupplier;
     private final Supplier<Double> ySupplier;
     private final Supplier<Double> rSupplier;
+    private final Supplier<Double> tSupplier;
 
     public teleOpMecanumDriveCommand(
             mecanumDriveSubsystem driveSub,
             limelightSubsystem llsub,
             Supplier<Double> xSupplier,
             Supplier<Double> ySupplier,
-            Supplier<Double> rSupplier
+            Supplier<Double> rSupplier,
+            Supplier<Double> tSupplier
             ) {
 
         this.driveSub = driveSub;
@@ -32,12 +35,13 @@ public class teleOpMecanumDriveCommand extends CommandBase {
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.rSupplier = rSupplier;
+        this.tSupplier = tSupplier;
         addRequirements(driveSub);
     }
 
     @Override
     public void execute() {
-        if(llsub.hasTarget()) {
+        if(llsub.hasTarget() && tSupplier.get() > 0.7) {
             //gets the joystick values
             double forward = ySupplier.get();
             double strafe  = xSupplier.get();
@@ -46,11 +50,10 @@ public class teleOpMecanumDriveCommand extends CommandBase {
             double rotPower = error * kPRotation;
 
             //clipped power to [-0.4, 0.4] for safety
-            rotPower = Math.max(Math.min(rotPower, 0.4), -0.4);
+            rotPower = Math.max(Math.min(rotPower, clippedRotPower), -clippedRotPower);
 
-            double strPower = rotPower;
 
-            driveSub.drive(forward, strafe, rotPower); //rot only
+            driveSub.drive(forward, strafe, -rotPower); //rot only
         } else {
             //Normal teleoperated drive if limelight does not see april tag
             double forward = ySupplier.get();

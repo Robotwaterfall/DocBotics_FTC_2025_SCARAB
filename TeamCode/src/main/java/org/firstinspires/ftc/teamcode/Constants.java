@@ -21,6 +21,9 @@ public class Constants {
     //public static  double targetDistanceMeters = 2;
 
 
+    public static double clippedRotPower = 0.4;
+
+
     private Constants() { }
 
 }

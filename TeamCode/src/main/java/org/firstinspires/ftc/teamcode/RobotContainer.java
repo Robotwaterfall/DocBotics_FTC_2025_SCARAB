@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Command.rotateToTargetCMD;
 import org.firstinspires.ftc.teamcode.Command.teleOpMecanumDriveCommand;
 import org.firstinspires.ftc.teamcode.Subsystem.limelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystem.mecanumDriveSubsystem;
@@ -53,12 +53,15 @@ public class RobotContainer extends CommandOpMode {
          * Sets the joysticks to always work to drive the robot
          * unless a different Op mode is selected
          */
+
+
         driveSub.setDefaultCommand(
                 new teleOpMecanumDriveCommand(
                         driveSub, llSub,
-                        () -> applyDeadband(driverJoystick.getLeftY(), 0.05),  // Forward/back
-                        () -> applyDeadband(driverJoystick.getLeftX(), 0.05),  // Strafe
-                        () -> applyDeadband(driverJoystick.getRightX(), 0.05) // Rotate
+                        () -> applyDeadband(-driverJoystick.getLeftY(), 0.05),  // Forward/back
+                        () -> applyDeadband(-driverJoystick.getLeftX(), 0.05),  // Strafe
+                        () -> applyDeadband(-driverJoystick.getRightX(), 0.05), // Rotate
+                        () -> (driverJoystick.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)) //Limelight lock on
                 )
         );
 
