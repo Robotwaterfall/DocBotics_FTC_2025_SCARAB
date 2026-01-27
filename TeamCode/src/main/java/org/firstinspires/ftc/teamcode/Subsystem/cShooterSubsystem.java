@@ -4,17 +4,18 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class cShooterSubsystem extends SubsystemBase {
 
-    DcMotor shooterMotor1;
+    DcMotorEx shooterMotor1;
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    public cShooterSubsystem(DcMotor m_shooterMotor1){
+    public cShooterSubsystem(DcMotorEx m_shooterMotor1){
         this.shooterMotor1 = m_shooterMotor1;
 
-
+        shooterMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooterMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
@@ -27,6 +28,8 @@ public class cShooterSubsystem extends SubsystemBase {
     public double getMotorPower(){
         return shooterMotor1.getPower();
     }
+
+    public DcMotorEx getShooterMotor1(){return shooterMotor1;}
 
     @Override
     public void periodic() {
